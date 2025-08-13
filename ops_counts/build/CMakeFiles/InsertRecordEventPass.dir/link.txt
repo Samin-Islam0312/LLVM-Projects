@@ -1,0 +1,1 @@
+/usr/bin/clang++-19 -fPIC  -Wl,--gc-sections -shared  -o InsertRecordEventPass.so CMakeFiles/InsertRecordEventPass.dir/pass.cpp.o  -Wl,-rpath,"\$ORIGIN/../lib:/usr/lib/llvm-19/lib:" /usr/lib/llvm-19/lib/libLLVM.so.1 
