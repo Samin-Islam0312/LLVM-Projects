@@ -81,7 +81,7 @@ struct InsertRecordEventPass : PassInfoMixin<InsertRecordEventPass> {
 
     for (Function &F : M) {
       if (F.isDeclaration()) continue;
-      if (!isCudaKernel(F))  continue;  // your helper
+      if (!isCudaKernel(F))  continue;  
 
       SmallVector<Instruction*, 128> Sites;
       SmallVector<int, 128>          Codes;
@@ -105,13 +105,13 @@ struct InsertRecordEventPass : PassInfoMixin<InsertRecordEventPass> {
             }
           }
 
-          // --- Count FP binary ops (scalar or vector) ---
+          // Count FP binary ops
           if (auto *BO = dyn_cast<BinaryOperator>(&I)) {
             if (!BO->getType()->isFPOrFPVectorTy()) continue;
 
             unsigned opc = BO->getOpcode();
             if (opc == Instruction::FAdd) {
-              // Treat add with a negated operand as "semantic subtraction"
+              // a negated operand as semantic subtraction
               Value *L = BO->getOperand(0);
               Value *R = BO->getOperand(1);
               bool looksSub = isNegConstFP(L) || isNegConstFP(R) || isFNeg(L) || isFNeg(R);
