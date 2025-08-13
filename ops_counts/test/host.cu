@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
   CUdevice dev; ck(cuDeviceGet(&dev, 0), "cuDeviceGet");
   CUcontext ctx; ck(cuCtxCreate(&ctx, 0, dev), "cuCtxCreate");
 
-  // Load instrumented PTX
+  // Loading instrumented PTX
   std::string ptx = load_text_file(ptxPath);
   CUmodule mod; ck(cuModuleLoadDataEx(&mod, ptx.c_str(), 0, nullptr, nullptr), "cuModuleLoadDataEx");
 
@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
      "cuLaunchKernel");
   ck(cuCtxSynchronize(), "cuCtxSynchronize");
 
-  // Read back per-op counts
+  // Reading back per-op counts
   unsigned long long hCounts[6] = {};
   ck(cuMemcpyDtoH(hCounts, dCounts, 6*sizeof(unsigned long long)), "cuMemcpyDtoH(gBinOpCounts)");
 
@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
   for (int i=0;i<6;i++)
     std::printf("  %-4s = %llu\n", names[i], (unsigned long long)hCounts[i]);
 
-  // (Optional) pull result to verify math path executed
+  // result to verify math path executed
   std::vector<float> hC; hC.resize(N);
   ck(cuMemcpyDtoH(hC.data(), dC, bytes), "cuMemcpyDtoH(C)");
 
