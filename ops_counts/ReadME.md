@@ -6,7 +6,12 @@ The pass detects operations such as addition, subtraction, multiplication, divis
 ## Build the pass 
 ```
 mkdir build && cd build
+```
+
+```
 cmake -DLLVM_DIR=/usr/lib/llvm-19/lib/cmake/llvm ..
+```
+```
 make
 ```
 
