@@ -15,7 +15,7 @@
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Transforms/Utils/ModuleUtils.h"
 
-using namespace llvm;   // Identify the kernel in the program file
+using namespace llvm;  
 static bool isCudaKernel(Function &F) {
   // CUDA kernels are marked in nvvm.annotations: ->>>> !nvvm.annotations = !{ !{ptr @kernel, !"kernel", i32 1}, ... }
   Module *M = F.getParent();
@@ -100,7 +100,7 @@ struct InsertRecordEventPass : PassInfoMixin<InsertRecordEventPass> {
               if (isFMA && I.getType()->isFPOrFPVectorTy()) {
                 Sites.push_back(&I);
                 Codes.push_back(5);
-                continue; // do not also try to classify as add/mul
+                continue; 
               }
             }
           }
