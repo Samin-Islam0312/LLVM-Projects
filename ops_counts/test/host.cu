@@ -1,4 +1,3 @@
-// file: host_driver.cpp
 #include <cuda.h>
 #include <cstdio>
 #include <cstdlib>
@@ -45,7 +44,7 @@ int main(int argc, char** argv) {
   std::string ptx = load_text_file(ptxPath);
   CUmodule mod; ck(cuModuleLoadDataEx(&mod, ptx.c_str(), 0, nullptr, nullptr), "cuModuleLoadDataEx");
 
-  // Resolve kernel and globals (names must match your device file)
+  // Resolve kernel and globals 
   CUfunction k; ck(cuModuleGetFunction(&k, mod, "divKernel"), "cuModuleGetFunction(divKernel)");
 
   // Per-op counters: gBinOpCounts[6] (u64)
@@ -87,7 +86,6 @@ int main(int argc, char** argv) {
   for (int i=0;i<6;i++)
     std::printf("  %-4s = %llu\n", names[i], (unsigned long long)hCounts[i]);
 
-  // result to verify math path executed
   std::vector<float> hC; hC.resize(N);
   ck(cuMemcpyDtoH(hC.data(), dC, bytes), "cuMemcpyDtoH(C)");
 
