@@ -17,34 +17,37 @@ make
 
 ## Compile and Run
 
+
+### Emit device LLVM IR (device-only)
 ```
-# Emit device LLVM IR (device-only)
 clang++ -x cuda -c ./test/device.cu --cuda-path=/usr/local/cuda \
  --cuda-gpu-arch=sm_90 --cuda-device-only -O1 -emit-llvm -S -o device.ll
 ```
+### Insert the pass (pipeline name: insert-record-event)
 ```
-# Insert the pass (pipeline name: insert-record-event)
 opt -load-pass-plugin=build/InsertRecordEventPass.so --passes=insert-record-event -S device.ll -o device_inst.ll
 ```
+### Lower to PTX
 ```
-# Lower to PTX
 llc -march=nvptx64 -mcpu=sm_90 device_inst.ll -o device_inst.ptx
 ```
+### PTX -> cubin
 ```
-# PTX -> cubin
 nvcc -arch=sm_90 -cubin device_inst.ptx -o device_inst.cubin
 ```
+### Device link (for any device symbols)
 ```
-# Device link (for any device symbols)
 nvcc -arch=sm_90 -dlink device_inst.cubin -o device_dlink.o
 ```
+### Build host
 ```
-# Build host
 nvcc -arch=sm_90 -c ./test/host.cu -o host.o
 ```
+### Link (-lcudart for Runtime API | -lcuda for Driver API)
+I am writing driver api codes because of the flexibility with the context management, which i need for llvm instrumentation
 ```
-# Link (-lcudart for Runtime API | -lcuda for Driver API), I am writing driver api codes because of the flexibility with the context management, which i need for llvm instrumentation
 nvcc -arch=sm_90 host.o device_dlink.o -lcuda -o main
-
+```
+```
 ./main
 ```
